@@ -11,21 +11,33 @@
   <title>Vite App</title>
 </head>
 
-<body class="container1 overflow-hidden  ">
+<body class="container1 overflow-hidden relative ">
 
   <div class="h-[20%]  w-full  py-2 mb-0 flex flex-row items-center justify-center ">
-    <div class="flex ml-10  ">
-
+    <div class="flex absolute top-2 left-5   ">
       <img src="/Logo.png" class="h-[130px] w-[130px] ml-4  " alt="vite logo">
     </div>
-    <div class="flex flex-1 flex-row items-center justify-center gap-3">
-      <p class=" text-3xl text-gray-300 font-medium ml-4">WeeFishLight</p>
-      <p class="self-end text-gray-400 font-light ">1121</p>
+    <div class="flex flex-1 flex-col items-center justify-center gap-3">
+      <div class="flex flex-1 flex-row items-center justify-center gap-3">
+        <p class=" text-3xl text-gray-300 font-medium ml-4">WeeFishLight</p>
+        <p class="self-end text-gray-400 font-light ">1121</p>
+      </div>
+       
+      <label class="switch-button" for="switch">
+        <div class="switch-outer">
+          <input id="switch" type="checkbox">
+          <div class="button">
+            <span class="button-toggle"></span>
+            <span class="button-indicator"></span>
+          </div>
+        </div>
+      </label>
+      
     </div>
       
   </div>
-  <div class="flex flex-1 w-full bg-red-600">
-    <canvas class=" " id="bg"></canvas>
+  <div class="flex flex-1 w-full ">
+    <canvas id="bg"></canvas>
   </div>
   <script type="module" src="/main.js"></script>
 </body>
