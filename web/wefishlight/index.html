@@ -1,13 +1,33 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <canvas id="bg"></canvas>
-    <script type="module" src="/main.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="./output.css" rel="stylesheet">
+  <link href="./style.css" rel="stylesheet">
+
+  <title>Vite App</title>
+</head>
+
+<body class="container1 overflow-hidden  ">
+
+  <div class="h-[20%]  w-full  py-2 mb-0 flex flex-row items-center justify-center ">
+    <div class="flex ml-10  ">
+
+      <img src="/Logo.png" class="h-[130px] w-[130px] ml-4  " alt="vite logo">
+    </div>
+    <div class="flex flex-1 flex-row items-center justify-center gap-3">
+      <p class=" text-3xl text-gray-300 font-medium ml-4">WeeFishLight</p>
+      <p class="self-end text-gray-400 font-light ">1121</p>
+    </div>
+      
+  </div>
+  <div class="flex flex-1 w-full bg-red-600">
+    <canvas class=" " id="bg"></canvas>
+  </div>
+  <script type="module" src="/main.js"></script>
+</body>
+
 </html>

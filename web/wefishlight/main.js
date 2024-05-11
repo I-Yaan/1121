@@ -1,8 +1,15 @@
-import './style.css'
 import axios from 'axios'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+// import Logo.png
+import Logo from '/wefishlightlogo.png'
+
+// dark white
+const WallColor = 0xeeeeee
+// dark gray
+const bgColor = 0x1D1E1F
+
 
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight)
@@ -11,97 +18,85 @@ const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg')
 renderer.setPixelRatio(window.devicePixelRatio)
 renderer.setSize(window.innerWidth, window.innerHeight)
 
-const floorColor = 0x526082
-const bulbColor = 0xFEF747
-
-// add background color #242424
-
-scene.background = new THREE.Color(0x242424)
-
-camera.position.set(16.983774549829118, 2.426112775447004, 16.08843220654572)
-
+scene.background = new THREE.Color(bgColor)
 renderer.render(scene, camera)
 
-// create light
-const pointLight = new THREE.PointLight(0xffffff, 500)
-const pointLight2 = new THREE.PointLight(0xffffff, 500)
-const pointLight3 = new THREE.PointLight(0xffffff, 300)
-const pointLight4 = new THREE.PointLight(0xffffff, 300)
-const ambientLight = new THREE.AmbientLight(0xffffff)
+function createWalls() {
+  // construct house with only 3 walls front left and bottom 
+  // front wall
+  const frontWall = new THREE.Mesh(
+    new THREE.BoxGeometry(12, 7, 0.1),
+    new THREE.MeshStandardMaterial({ color: WallColor })
+  )
+  frontWall.position.set(0, 1, -6)
+  scene.add(frontWall)
 
-pointLight4.position.set(-15, 8, 16)
-pointLight3.position.set(15, 8, -16)
-pointLight2.position.set(-15, -8, -16)
-pointLight.position.set(10, 10, 15)
-scene.add(pointLight4)
-scene.add(pointLight3)
-scene.add(pointLight2)
-scene.add(pointLight)
+  // left wall
+  const leftWall = new THREE.Mesh(
+    new THREE.BoxGeometry(0.2, 7, 12),
+    new THREE.MeshStandardMaterial({ color: WallColor })
+  )
+  leftWall.position.set(-6, 1, 0)
+  scene.add(leftWall)
 
+  // the bottom wall with Logo.png on his face
+  const bottomWall = new THREE.Mesh(
+    new THREE.BoxGeometry(12, 0.1, 12),
+    new THREE.MeshStandardMaterial({ color: WallColor })
+  )
+  bottomWall.position.set(0, -2.5, 0)
+  scene.add(bottomWall)
 
+  // add logo to the bottom wall
+  const loader = new THREE.TextureLoader()
+  loader.load(Logo, (texture) => {
+    const logo = new THREE.Mesh(
+      new THREE.BoxGeometry(6, 6, 0.01),
+      new THREE.MeshStandardMaterial({ map: texture  })
+    )
+    logo.position.set(0, -2.4, 0)
+    logo.rotation.x = Math.PI/2
+    logo.rotation.z = Math.PI/4 + Math.PI/2
+    scene.add(logo)
+  })
+  
 
-// create helpers
-const lightHelper = new THREE.PointLightHelper(pointLight)
-const lightHelper2 = new THREE.PointLightHelper(pointLight2)
-const lightHelper3 = new THREE.PointLightHelper(pointLight3)
-const lightHelper4 = new THREE.PointLightHelper(pointLight4)
-const gridHelper = new THREE.GridHelper(200, 50)
-gridHelper.position.y = -10
+  // make a group for the walls
+  const walls = new THREE.Group()
+  walls.add(frontWall)
+  walls.add(leftWall)
+  walls.add(bottomWall)
+  scene.add(walls)
 
-// create a control
-const controls = new OrbitControls(camera, renderer.domElement)
+  return walls
+}
 
-// create a FLOOR of color #646cff
-const geometry = new THREE.BoxGeometry(25, 1, 25)
-const material = new THREE.MeshStandardMaterial({ color: floorColor })
-const floor = new THREE.Mesh(geometry, material)
-
-scene.add(floor)
-
-floor.position.set(0, -10, 0)
-
-
-// Create light bulb
-const lightBulb = new THREE.PointLight(0xFFFEE8, 700)
-const lb2 = new THREE.PointLight(0xFFFEE8, 500)
-
-lightBulb.position.set(0, -3, 0)
-
-lb2.position.set(0, 3, 0)
-
-// lightbulb helper
-const lightBulbHelper = new THREE.PointLightHelper(lightBulb);
-//scene.add(lightHelper, gridHelper, lightHelper2, lightHelper3, lightHelper4)
 
 
 
 let intensity = 700;
 const group = new THREE.Group();
-//main bulb
+//MAIN bulb
 var bulbGeometry = new THREE.SphereGeometry(1, 32, 32);
-var bulbLight = new THREE.PointLight(0xffee88, 1, 100, 2);
+var mainBulbLight = new THREE.PointLight(0xffee88, 1, 100, 2);
 var bulbMat = new THREE.MeshStandardMaterial({
   emissive: 0xffffee,
   emissiveIntensity: intensity,
   color: 0xffffee,
   roughness: 1
 });
-
-bulbLight.add(new THREE.Mesh(bulbGeometry, bulbMat));
-bulbLight.position.set(0, 2, 0);
-bulbLight.castShadow = true;
-
+mainBulbLight.add(new THREE.Mesh(bulbGeometry, bulbMat));
+mainBulbLight.position.set(0, 2, 0);
+mainBulbLight.castShadow = true;
 var d = 200;
+mainBulbLight.shadow.camera.left = -d;
+mainBulbLight.shadow.camera.right = d;
+mainBulbLight.shadow.camera.top = d;
+mainBulbLight.shadow.camera.bottom = -d;
+mainBulbLight.shadow.camera.far = 100;
 
-bulbLight.shadow.camera.left = -d;
-bulbLight.shadow.camera.right = d;
-bulbLight.shadow.camera.top = d;
-bulbLight.shadow.camera.bottom = -d;
-
-bulbLight.shadow.camera.far = 100;
-
-// bulb off 
-var bulbLightoff = new THREE.PointLight(0x000000, 1, 100, 2);
+// MAIN bulb off 
+var mainBulbLightOff = new THREE.PointLight(0x000000, 1, 100, 2);
 var bulbMatoff = new THREE.MeshStandardMaterial({
   emissive: 0xffffee,
   emissiveIntensity: 0,
@@ -109,11 +104,12 @@ var bulbMatoff = new THREE.MeshStandardMaterial({
   roughness: 1
 });
 
-bulbLightoff.add(new THREE.Mesh(bulbGeometry, bulbMatoff));
-bulbLightoff.position.set(0, 2, 0);
-bulbLightoff.castShadow = true;
+mainBulbLightOff.add(new THREE.Mesh(bulbGeometry, bulbMatoff));
+mainBulbLightOff.position.set(0, 2, 0);
+mainBulbLightOff.castShadow = true;
 
-//stem light
+
+//STEM light
 var bulbStem = new THREE.CylinderGeometry(0.5, 0.65, 0.55, 32);
 var stemMat = new THREE.MeshStandardMaterial({
   color: 0xffffff,
@@ -128,8 +124,8 @@ bStem.position.set(0, 2.9, 0);
 bStem.castShadow = true;
 bStem.receiveShadow = true;
 
-//stem off
-var bulbStemoff = new THREE.CylinderGeometry(0.5, 0.65, 0.55, 32);
+//STEM off
+var bulbStemOff = new THREE.CylinderGeometry(0.5, 0.65, 0.55, 32);
 var stemMatoff = new THREE.MeshStandardMaterial({
   color: 0xffffff,
   emissive: 0xffffee,
@@ -138,11 +134,10 @@ var stemMatoff = new THREE.MeshStandardMaterial({
   roughness: 0
 });
 
-var bStemoff = new THREE.Mesh(bulbStemoff, stemMatoff);
+var bStemoff = new THREE.Mesh(bulbStemOff, stemMatoff);
 bStemoff.position.set(0, 2.9, 0);
 bStemoff.castShadow = true;
 bStemoff.receiveShadow = true;
-
 
 //plug main
 var bulbPlug = new THREE.CylinderGeometry(0.52, 0.52, 1.2, 32);
@@ -199,7 +194,7 @@ botRing.rotation.x = -Math.PI / 2;
 
 //add to group
 group.add(bStem);
-group.add(bulbLight);
+group.add(mainBulbLight);
 group.add(plug);
 group.add(plugTop);
 group.add(botRing);
@@ -211,26 +206,45 @@ group.position.z = 0;
 group.position.x = 0;
 group.rotation.x = Math.PI;
 
-group.position.set(0, -4, 0)
+group.position.set(0, 3, 0)
+
+// add light in the bulb
+const mainLight = new THREE.PointLight(0xfffeee, 15)
+mainLight.position.set(0, 2, 0)
+scene.add(mainLight)
 
 
+
+
+
+
+const walls = createWalls()
+
+// add light
+const pointLight = new THREE.PointLight(0xfeeeee, 20)
+pointLight.position.set(10, 0, 10)
+scene.add(pointLight)
+
+// add light helper
+const lightHelper = new THREE.PointLightHelper(pointLight)
+scene.add(lightHelper)
+
+// add camera
+camera.position.z = 5
+// add controls
+const controls = new OrbitControls(camera, renderer.domElement)
 
 animate()
 function animate() {
   requestAnimationFrame(animate)
-
-  controls.update()
-
-  // camera fixing bulb
-  camera.lookAt(group.position)
-  // floor rotation
-  floor.rotation.y += 0.005
-
   renderer.render(scene, camera)
+  
+  // make camera follow the bulb
+  camera.lookAt(group.position)
+  controls.update()
 
 }
 
-// Add click event listener
 window.addEventListener('click', onClick, false);
 // Toggle light function
 let lightOn = false;
@@ -238,21 +252,25 @@ function toggleLight() {
   lightOn = !lightOn;
   if (lightOn) {
     // Turn off light
+    group.remove(mainBulbLight);
     group.remove(bStem);
-    group.remove(bulbLight);
-    scene.remove(lightBulb)
+    group.add(mainBulbLightOff);
     group.add(bStemoff);
-    group.add(bulbLightoff);
-    OFF()
+
+    scene.remove(mainLight);
+ 
+
+
+
   } else {
     // Turn on light
-    group.add(bStem);
-    scene.add(lightBulb)
-
+    group.remove(mainBulbLightOff);
     group.remove(bStemoff);
-    group.remove(bulbLightoff);
-    group.add(bulbLight);
-    ON()
+    group.add(mainBulbLight);
+    group.add(bStem);
+    scene.add(mainLight);
+ 
+
   }
 }
 // Function to handle click events
@@ -269,17 +287,4 @@ function onClick(event) {
     console.log('Light bulb clicked');
     toggleLight();
   }
-}
-
-/*controls.addEventListener( "change", event => {  
-  console.log( controls.object.position ); 
-} )*/
-
-
-const URL = "http://192.168.0.1"
-const ON = async () => {
-  await axios.get(`${URL}/on`)
-}
-const OFF = async () => {
-  await axios.get(`${URL}/off`)
 }
