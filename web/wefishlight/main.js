@@ -4,6 +4,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 // import Logo.png
 import Logo from '/Logo.png'
+import WLogo from '/wefishlightlogo.png'
+
 
 // dark white
 const WallColor = 0xeeeeee
@@ -57,6 +59,28 @@ function createWalls() {
     logo.position.set(0, -2.4, 0)
     logo.rotation.x = Math.PI/2
     logo.rotation.z = Math.PI/4 + Math.PI/2
+    scene.add(logo)
+  })
+
+  // add WLogo to the bottom wall
+
+  loader.load(WLogo, (texture) => {
+    const logo = new THREE.Mesh(
+      new THREE.BoxGeometry(2.5, 2.5, 0.01),
+      new THREE.MeshStandardMaterial({ map: texture, color:0xffffff  })
+    )
+    logo.position.set(1, 0.1, -4.9)
+    logo.rotation.x = 0
+    scene.add(logo)
+  })
+
+  loader.load(WLogo, (texture) => {
+    const logo = new THREE.Mesh(
+      new THREE.BoxGeometry(2.5, 2.5, 0.01),
+      new THREE.MeshStandardMaterial({ map: texture, color:0xffffff  })
+    )
+    logo.position.set(-4.9, 0.1, 1)
+    logo.rotation.y = Math.PI/2
     scene.add(logo)
   })
   
@@ -221,7 +245,7 @@ group.rotation.x = Math.PI;
 group.position.set(-3, 3, -3)
 
 // add light in the bulb
-const mainLight = new THREE.PointLight(0xfffeee, 20)
+const mainLight = new THREE.PointLight(0xfffeee, 50)
 mainLight.position.set(0, 2, 0)
 group.add(mainLight)
 
@@ -233,7 +257,7 @@ group.add(mainLight)
 const walls = createWalls()
 
 // add light
-const pointLight = new THREE.PointLight(0xfeeeee, 10)
+const pointLight = new THREE.PointLight(0xfeeeee, 30)
 pointLight.position.set(10, 0, 10)
 scene.add(pointLight)
 
@@ -286,6 +310,13 @@ window.addEventListener('click', onClick, false);
 let lightOn = true;
 // get checkbox id="switch" 
 const switchButton = document.getElementById('switch')
+
+// listen on switchButton checkbox change
+
+//switchButton.addEventListener('change', toggleLight);
+
+
+
 switchButton.checked = lightOn
 function toggleLight() {
   // checkbox switchButton
