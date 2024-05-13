@@ -1,7 +1,7 @@
 # WeeFishLight 1121
 Projet 2 BAC1 ingénieur civil de l'EPL à UClouvain, FSA11B, groupe 11.21
 
-[Code](esp) arduino pour une carte esp8266 permettant la gestion d'une LED via le wifi
+[Code](esp) arduino pour le microcontroleur esp8266 d1 mini permettant la gestion d'une LED via le wifi
   * Creation d'un wifi "esp"
   * Deploie un site html par default pour controler l'état d'un led
 ----------------------------------------------------------------------
